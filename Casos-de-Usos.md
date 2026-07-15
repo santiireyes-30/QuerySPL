@@ -30,7 +30,9 @@ Priority: High Msg: "SE HA DETECTADO UNA ALERTA DE FUERZA BRUTA EN EL [VARIABLE]
 
 "Los logs van directo al Backend de Splunk"
 
-### Local File Inclusion (LFI) Local File Inclusion (LFI): es una vulnerabilidad que ocurre cuando una aplicación permite que el usuario incluya (cargue o lea) archivos locales del servidor a través de una URL.
+### Local File Inclusion (LFI) Local File Inclusion (LFI): 
+
+Es una vulnerabilidad que ocurre cuando una aplicación permite que el usuario incluya (cargue o lea) archivos locales del servidor a través de una URL.
 
 Un ataque de tipo LFI puede permitir:
 
