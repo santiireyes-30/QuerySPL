@@ -2,7 +2,9 @@
 
 Aqui agregaremos las Consultas SPL para las Detecciones ante posible Ataques.
 
-### Caso de Uso de Fuerza Bruta index = H70 Windows EventCode = 4625
+### Caso de Uso de Fuerza Bruta 
+
+| index = H70 Windows EventCode = 4625
 
 | rename "Dirección de Red de Origen" as IP
 
@@ -30,7 +32,7 @@ Priority: High Msg: "SE HA DETECTADO UNA ALERTA DE FUERZA BRUTA EN EL [VARIABLE]
 
 "Los logs van directo al Backend de Splunk"
 
-### Local File Inclusion (LFI) Local File Inclusion (LFI): 
+### Local File Inclusion (LFI): 
 
 Es una vulnerabilidad que ocurre cuando una aplicación permite que el usuario incluya (cargue o lea) archivos locales del servidor a través de una URL.
 
@@ -72,7 +74,9 @@ La línea iplocation agrega el país correspondiente a la IP para mostrarlo en l
 
 Es cuando guardamos la alerta utilizando la opción del SOAR para automatizarla.
 
-### Caso de uso: Exceso de registros de Ping sourcetype=firewall OR sourcetype=network_traffic icmp
+### Caso de uso: Exceso de registros de Ping 
+
+| sourcetype=firewall OR sourcetype=network_traffic icmp
 
 | stats count by src_ip dest_ip
 
@@ -86,13 +90,16 @@ Adicional:
 
 Explicación
 
-Filtra eventos relacionados con el protocolo ICMP. Cuenta cuántos paquetes ICMP hay por IP origen y destino. where count > 50: muestra solo los casos con más de 50 paquetes. sort -count: ordena de mayor a menor cantidad de paquetes. Esto genera una gráfica temporal del tráfico ICMP por IP, ideal para identificar picos.
+Filtra eventos relacionados con el protocolo ICMP. Cuenta cuántos paquetes ICMP hay por IP origen y destino. where count > 50: muestra solo los casos con más de 50 paquetes.
+sort -count: ordena de mayor a menor cantidad de paquetes. Esto genera una gráfica temporal del tráfico ICMP por IP, ideal para identificar picos.
 
 #### ICMP (Internet Control Message Protocol)
 
 Es un protocolo que se utiliza para enviar mensajes de control y diagnóstico entre dispositivos.
 
-### Caso de uso para ver los comandos que utilizó el atacante (RCE) index=vps_azure source="/home/admin(run)" (IP)
+### Caso de uso para ver los comandos que utilizó el atacante (RCE) 
+
+| index=vps_azure source="/home/admin(run)" (IP)
 
 | stats count by _time http.url http.hostname dest_ip
 
@@ -318,25 +325,23 @@ Comienza desde la raíz del sistema.
 
 Ejemplo: /etc/passwd
 
-Ruta relativa
+### Ruta relativa
 
 Depende de la ubicación actual.
 
 Ejemplo: ../../etc/passwd
 
-Path Traversal
+#### Path Traversal
 
 Normalmente utiliza rutas relativas (../), aunque algunos ataques también emplean rutas absolutas dependiendo de la vulnerabilidad.
 
 ⸻
 
-Comandos / Casos de uso (Splunk)
+### Comandos / Casos de uso (Splunk)
 
-Un atacante sólo puede ver tu IP privada si
+Un atacante sólo puede ver tu IP privada si está dentro de tu red. Comprometió tu equipo. Tiene acceso interno. ⸻
 
-Está dentro de tu red. Comprometió tu equipo. Tiene acceso interno. ⸻
-
-Caso 1
+#### Caso 1
 
 Login exitoso luego de múltiples fallos
 
@@ -353,7 +358,7 @@ Detecta:
 
 Ataques exitosos luego de múltiples intentos. Credential Stuffing. Fuerza bruta exitosa. ⸻
 
-Caso 2
+#### Caso 2
 
 Actividad DNS sospechosa
 
@@ -367,7 +372,7 @@ Detecta:
 
 Dominios consultados repetidamente. Posible comportamiento de malware. ⸻
 
-Caso 3
+#### Caso 3
 
 DNS Tunneling
 
@@ -383,7 +388,7 @@ Detecta:
 
 Dominios excesivamente largos. Posible exfiltración de datos mediante DNS. ⸻
 
-Caso 4
+#### Caso 4
 
 Escaneo de puertos
 
