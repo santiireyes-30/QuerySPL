@@ -161,3 +161,169 @@ cat /etc/passwd
 
 * Hora.
 * Comando que el atacante intentó ejecutar.
+
+#### Caso de uso del Evento 5145
+
+1. Index
+
+index = H7O_Windows
+EventCode = 5145
+
+Renombrar los campos:
+
+rename "Dirección de origen" AS IP
+rename "Nombre del recurso compartido" AS Recurso
+rename "Nombre de cuenta" AS Usuario
+rename "Ruta de acceso de recurso compartido" AS Ruta
+rename "Nombre de destino relativo" AS Archivo
+
+Agregar un mensaje:
+eval mensaje="Detección de acceso a recurso compartido"
+
+Convertir el tiempo:
+eval tiempo=strftime(_time,"%d/%m/%Y - %H:%M:%S")
+
+Mostrar:
+table mensaje, IP, Ruta, Archivo, Recurso, Usuario, tiempo
+sort + tiempo
+
+Nota:
+
+* sort + tiempo ordena los eventos desde el más antiguo al más reciente.
+
+⸻
+
+Explicación
+
+Event ID 5145 (Windows Security)
+
+Corresponde a:
+
+“A network share object was checked to determine whether the client can be granted the desired access.”
+
+En otras palabras:
+
+Cuando un usuario intenta acceder a un archivo o recurso compartido mediante SMB, Windows verifica si tiene permisos para hacerlo.
+
+Qué detecta?
+
+* Acceso a un archivo compartido.
+* Intento de acceder a un recurso en un Share de red.
+* Comprobación de permisos antes del acceso.
+
+⸻
+
+¿Qué hace la búsqueda?
+
+1. Detecta el acceso.
+2. Elimina eventos duplicados (si corresponde).
+3. Ordena cronológicamente.
+
+⸻
+
+Eventos ID de Windows esperados
+
+1. Eventos SMB (Compartición de archivos)
+
+SMB (Server Message Block) es el protocolo utilizado para compartir:
+
+* Archivos
+* Carpetas
+* Impresoras
+* Recursos de red
+
+⸻
+
+Event ID 5140
+
+Acceso a un recurso compartido.
+
+Puede indicar:
+
+* Acceso a carpetas compartidas.
+* Movimiento lateral (MITRE ATT&CK).
+* Robo de archivos mediante SMB.  
+
+⸻
+
+Event ID 5145
+
+Comprobación de permisos sobre un recurso compartido.
+
+Windows registra este evento cuando verifica si un cliente posee permisos suficientes para acceder al archivo solicitado.  
+
+⸻
+
+2. Usuarios
+
+Event ID 4720
+
+Se creó una cuenta de usuario.
+
+⸻
+
+Event ID 4732
+
+Un usuario fue agregado a un grupo local de seguridad (por ejemplo, Administrators).
+
+Puede indicar que un atacante elevó privilegios agregando su usuario al grupo Administradores.  
+
+⸻
+
+3. Eventos RDP
+
+Event ID 4624
+
+Inicio de sesión exitoso.
+
+Si el Logon Type = 10, corresponde a un inicio mediante RDP.
+
+⸻
+
+Event ID 4625
+
+Intento fallido de inicio de sesión.
+
+⸻
+
+Event ID 4672
+
+Privilegios especiales asignados al nuevo inicio de sesión.
+
+Suele aparecer cuando inicia sesión un administrador o una cuenta con privilegios elevados.  
+
+⸻
+
+Puertos importantes
+
+NetBIOS → 139
+
+SMB → 445
+
+RDP → 3389
+
+⸻
+
+Event ID 4688
+
+Creación de un nuevo proceso después del login.
+
+Permite identificar qué proceso ejecutó un usuario.  
+
+⸻
+
+Caso: Detección de borrado de logs de seguridad
+
+Event ID 1102
+
+Corresponde al borrado del registro de auditoría de Windows.
+
+index=wineventlog
+source="WinEventLog:Security"
+EventCode=1102
+
+Renombrar:
+Nombre de cuenta
+
+Mostrar:
+table _time, host, Signature, user
