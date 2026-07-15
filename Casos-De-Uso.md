@@ -327,3 +327,144 @@ Nombre de cuenta
 
 Mostrar:
 table _time, host, Signature, user
+
+Programar:
+
+* Tiempo real (Real-Time)
+* Resultado por evento
+* Severidad: Critical
+
+El Event ID 1102 es muy importante porque los atacantes suelen borrar los logs para ocultar sus acciones después de comprometer un equipo.  
+
+Programar:
+
+* Tiempo real (Real-Time)
+* Resultado por evento
+* Severidad: Critical
+
+El Event ID 1102 es muy importante porque los atacantes suelen borrar los logs para ocultar sus acciones después de comprometer un equipo.  
+
+Ejemplos: 
+../../
+../../../
+../../../etc/passwd
+
+Objetivo:
+
+Acceder a archivos restringidos del servidor.
+
+Riesgo:
+
+Medio/Alto
+
+⸻
+
+Absolute Path Traversal
+
+Utiliza rutas absolutas del sistema operativo.
+
+Ejemplo Linux:
+/etc/passwd
+
+Diferencia entre ruta absoluta y relativa
+
+Ruta absoluta
+
+Comienza desde la raíz del sistema.
+
+Ejemplo:
+/etc/passwd
+
+Ruta relativa
+
+Depende de la ubicación actual.
+
+Ejemplo:
+../../etc/passwd
+
+Path Traversal
+
+Normalmente utiliza rutas relativas (../), aunque algunos ataques también emplean rutas absolutas dependiendo de la vulnerabilidad.
+
+⸻
+
+Comandos / Casos de uso (Splunk)
+
+Un atacante sólo puede ver tu IP privada si
+
+* Está dentro de tu red.
+* Comprometió tu equipo.
+* Tiene acceso interno.
+
+⸻
+
+Caso 1
+
+Login exitoso luego de múltiples fallos
+
+index=security EventCode IN (4624,4625)
+
+| stats count(eval(EventCode=4625)) AS Failures
+        count(eval(EventCode=4624)) AS Success
+        BY Account_Name, Source_Network_Address
+
+| where Failures > 5 AND Success > 0
+
+Detecta:
+
+* Ataques exitosos luego de múltiples intentos.
+* Credential Stuffing.
+* Fuerza bruta exitosa.
+
+⸻
+
+Caso 2
+
+Actividad DNS sospechosa
+
+index=dns
+
+| stats count BY src_ip, query
+
+| where count > 10
+
+Detecta:
+
+* Dominios consultados repetidamente.
+* Posible comportamiento de malware.
+
+⸻
+
+Caso 3
+
+DNS Tunneling
+
+index=dns
+
+| eval qlen=len(query)
+
+| where qlen > 50
+
+| stats count BY src_ip, query
+
+Detecta:
+
+* Dominios excesivamente largos.
+* Posible exfiltración de datos mediante DNS.
+
+⸻
+
+Caso 4
+
+Escaneo de puertos
+
+index=network
+
+| stats dc(dest_port) AS Ports BY src_ip
+
+| where Ports > 20
+
+Detecta:
+
+* Una IP intentando conectarse a muchos puertos distintos.
+* Reconocimiento previo a un ataque (Port Scanning).
