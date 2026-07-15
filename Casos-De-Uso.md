@@ -7,14 +7,23 @@ Aqui agregaremos las Consultas SPL para las Detecciones ante posible Ataques.
 index = H70  Windows  EventCode = 4625
 
 | rename "Dirección de Red de Origen" as IP
+
 | rename "Nombre de estación de trabajo" as MachineNameAtacante
+
 | rename "Nombre de cuenta" as Usuario
+
 | eval tiempo = strftime(_time, "%B %d, %Y - %I:%M:%S %p")
+
 | eval Mensaje = "Login RDP Fallido"
+
 | table Mensaje, IP, Usuario, tiempo
+
 | eval Usuario = mvindex(Usuario, 1)
+
 | sort + tiempo   *(de menor a mayor organiza los eventos)*
+
 | stats count by Mensaje
+
 | save as Alerta → Run on Cron Schedule
 
 (Para establecer un cron son 5 *)
@@ -39,10 +48,15 @@ Consulta para averiguar si están haciendo LFI (Caso de uso LFI)
 index=vps_azure dest_port=80 (ip) "http_status"=404
 
 | stats count by http.url _time src_ip
+
 | rename http.url as url
+
 | eval decoderUrl=urldecode(url)
+
 | eval chequeo=if(match(decoderUrl,"\.\."),"Puntos","Sin Puntos")
+
 | where chequeo="Puntos"
+
 | table decoderUrl count src_ip
 
 Explicación
@@ -59,8 +73,11 @@ Todo el código devuelve los siguientes campos:
 index=vps_azure source="/var/log/fail2ban.log"
 
 | rex field=_raw "Ban (?<IP>[^\ ]+)"
+
 | stats count by IP
+
 | iplocation IP
+
 | table IP Country count
 
 Explicación
@@ -74,7 +91,9 @@ Es cuando guardamos la alerta utilizando la opción del SOAR para automatizarla.
 sourcetype=firewall OR sourcetype=network_traffic icmp
 
 | stats count by src_ip dest_ip
+
 | where count > 50
+
 | sort -count
 
 Adicional:
@@ -171,11 +190,15 @@ EventCode = 5145
 
 Renombrar los campos:
 
-rename "Dirección de origen" AS IP
-rename "Nombre del recurso compartido" AS Recurso
-rename "Nombre de cuenta" AS Usuario
-rename "Ruta de acceso de recurso compartido" AS Ruta
-rename "Nombre de destino relativo" AS Archivo
+| rename "Dirección de origen" AS IP
+
+| rename "Nombre del recurso compartido" AS Recurso
+
+| rename "Nombre de cuenta" AS Usuario
+
+| rename "Ruta de acceso de recurso compartido" AS Ruta
+
+| rename "Nombre de destino relativo" AS Archivo
 
 Agregar un mensaje:
 eval mensaje="Detección de acceso a recurso compartido"
@@ -200,8 +223,6 @@ Event ID 5145 (Windows Security)
 Corresponde a:
 
 “A network share object was checked to determine whether the client can be granted the desired access.”
-
-En otras palabras:
 
 Cuando un usuario intenta acceder a un archivo o recurso compartido mediante SMB, Windows verifica si tiene permisos para hacerlo.
 
@@ -318,9 +339,11 @@ Event ID 1102
 
 Corresponde al borrado del registro de auditoría de Windows.
 
-index=wineventlog
-source="WinEventLog:Security"
-EventCode=1102
+| index=wineventlog
+
+| source="WinEventLog:Security"
+
+| EventCode=1102
 
 Renombrar:
 Nombre de cuenta
@@ -345,8 +368,11 @@ Programar:
 El Event ID 1102 es muy importante porque los atacantes suelen borrar los logs para ocultar sus acciones después de comprometer un equipo.  
 
 Ejemplos: 
+
 ../../
+
 ../../../
+
 ../../../etc/passwd
 
 Objetivo:
@@ -405,7 +431,9 @@ Login exitoso luego de múltiples fallos
 index=security EventCode IN (4624,4625)
 
 | stats count(eval(EventCode=4625)) AS Failures
+
         count(eval(EventCode=4624)) AS Success
+      
         BY Account_Name, Source_Network_Address
 
 | where Failures > 5 AND Success > 0
