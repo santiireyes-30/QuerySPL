@@ -1,8 +1,8 @@
-#### CASOS DE USO - SPLUNK
+## CASOS DE USO - SPLUNK
 
 Aqui agregaremos las Consultas SPL para las Detecciones ante posible Ataques.
 
-Caso de Uso de Fuerza Bruta index = H70 Windows EventCode = 4625
+### Caso de Uso de Fuerza Bruta index = H70 Windows EventCode = 4625
 
 | rename "Dirección de Red de Origen" as IP
 
@@ -30,7 +30,7 @@ Priority: High Msg: "SE HA DETECTADO UNA ALERTA DE FUERZA BRUTA EN EL [VARIABLE]
 
 "Los logs van directo al Backend de Splunk"
 
-Local File Inclusion (LFI) Local File Inclusion (LFI): es una vulnerabilidad que ocurre cuando una aplicación permite que el usuario incluya (cargue o lea) archivos locales del servidor a través de una URL.
+### Local File Inclusion (LFI) Local File Inclusion (LFI): es una vulnerabilidad que ocurre cuando una aplicación permite que el usuario incluya (cargue o lea) archivos locales del servidor a través de una URL.
 
 Un ataque de tipo LFI puede permitir:
 
@@ -70,7 +70,7 @@ La línea iplocation agrega el país correspondiente a la IP para mostrarlo en l
 
 Es cuando guardamos la alerta utilizando la opción del SOAR para automatizarla.
 
-Caso de uso: Exceso de registros de Ping sourcetype=firewall OR sourcetype=network_traffic icmp
+### Caso de uso: Exceso de registros de Ping sourcetype=firewall OR sourcetype=network_traffic icmp
 
 | stats count by src_ip dest_ip
 
@@ -86,11 +86,11 @@ Explicación
 
 Filtra eventos relacionados con el protocolo ICMP. Cuenta cuántos paquetes ICMP hay por IP origen y destino. where count > 50: muestra solo los casos con más de 50 paquetes. sort -count: ordena de mayor a menor cantidad de paquetes. Esto genera una gráfica temporal del tráfico ICMP por IP, ideal para identificar picos.
 
-ICMP (Internet Control Message Protocol)
+#### ICMP (Internet Control Message Protocol)
 
 Es un protocolo que se utiliza para enviar mensajes de control y diagnóstico entre dispositivos.
 
-Caso de uso para ver los comandos que utilizó el atacante (RCE) index=vps_azure source="/home/admin(run)" (IP)
+### Caso de uso para ver los comandos que utilizó el atacante (RCE) index=vps_azure source="/home/admin(run)" (IP)
 
 | stats count by _time http.url http.hostname dest_ip
 
@@ -144,7 +144,7 @@ Ejemplo: cmd=cat%20/etc/passwd ↓ cat /etc/passwd
 
 Muestra una tabla final con: Hora. Comando que el atacante intentó ejecutar. Caso de uso del Evento 5145 Index index = H7O_Windows EventCode = 5145
 
-Renombrar los campos:
+#### Renombrar los campos:
 
 | rename "Dirección de origen" AS IP
 
@@ -168,7 +168,7 @@ sort + tiempo ordena los eventos desde el más antiguo al más reciente. ⸻
 
 Explicación
 
-Event ID 5145 (Windows Security)
+#### Event ID 5145 (Windows Security)
 
 Corresponde a:
 
@@ -190,7 +190,7 @@ Eventos SMB (Compartición de archivos) SMB (Server Message Block) es el protoco
 
 Archivos Carpetas Impresoras Recursos de red ⸻
 
-Event ID 5140
+#### Event ID 5140
 
 Acceso a un recurso compartido.
 
@@ -198,7 +198,7 @@ Puede indicar:
 
 Acceso a carpetas compartidas. Movimiento lateral (MITRE ATT&CK). Robo de archivos mediante SMB. ⸻
 
-Event ID 5145
+#### Event ID 5145
 
 Comprobación de permisos sobre un recurso compartido.
 
@@ -212,7 +212,7 @@ Se creó una cuenta de usuario.
 
 ⸻
 
-Event ID 4732
+#### Event ID 4732
 
 Un usuario fue agregado a un grupo local de seguridad (por ejemplo, Administrators).
 
@@ -220,7 +220,7 @@ Puede indicar que un atacante elevó privilegios agregando su usuario al grupo A
 
 ⸻
 
-Eventos RDP Event ID 4624
+#### Eventos RDP Event ID 4624
 
 Inicio de sesión exitoso.
 
@@ -228,13 +228,13 @@ Si el Logon Type = 10, corresponde a un inicio mediante RDP.
 
 ⸻
 
-Event ID 4625
+#### Event ID 4625
 
 Intento fallido de inicio de sesión.
 
 ⸻
 
-Event ID 4672
+#### Event ID 4672
 
 Privilegios especiales asignados al nuevo inicio de sesión.
 
@@ -242,7 +242,7 @@ Suele aparecer cuando inicia sesión un administrador o una cuenta con privilegi
 
 ⸻
 
-Puertos importantes
+#### Puertos importantes
 
 NetBIOS → 139
 
@@ -252,7 +252,7 @@ RDP → 3389
 
 ⸻
 
-Event ID 4688
+#### Event ID 4688
 
 Creación de un nuevo proceso después del login.
 
@@ -262,7 +262,7 @@ Permite identificar qué proceso ejecutó un usuario.
 
 Caso: Detección de borrado de logs de seguridad
 
-Event ID 1102
+#### Event ID 1102
 
 Corresponde al borrado del registro de auditoría de Windows.
 
@@ -302,7 +302,7 @@ Medio/Alto
 
 ⸻
 
-Absolute Path Traversal
+### Absolute Path Traversal
 
 Utiliza rutas absolutas del sistema operativo.
 
@@ -310,7 +310,7 @@ Ejemplo Linux: /etc/passwd
 
 Diferencia entre ruta absoluta y relativa
 
-Ruta absoluta
+### Ruta absoluta
 
 Comienza desde la raíz del sistema.
 
