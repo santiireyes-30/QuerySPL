@@ -8,7 +8,7 @@ ATT: SANTIAGO REYES
 
 ## CASOS DE USO - SPLUNK
 
-Aqui agregaremos las Consultas SPL para las Detecciones ante posible Ataques.
+Aqui agregaremos y analizaremos las Consultas SPL y los logs/registros para las Detecciones ante posible Ataques. Támbien vemos los Eventos ID más casuales en el entorno de Splunk
 
 Caso de Uso de Fuerza Bruta
 index = H70 Windows EventCode = 4625
