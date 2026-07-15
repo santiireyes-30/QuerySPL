@@ -1,5 +1,3 @@
-# Casos De Usos SPLUNK
-
 Este repositorio recopila distintos **Casos de Usos (Use Cases)** implementados y documentados en Splunk para la detección, investigación y monitoreo de eventos de ciberseguridad. 
 
 Támbien repasamos los Eventos ID más comúnes y explicamos más a detalle las consultas y detecciones
@@ -8,7 +6,8 @@ El objetivo es servir como una colección de consultas SPL, detecciones y escena
 
 ATT: SANTIAGO REYES
 
-CASOS DE USO - SPLUNK
+## CASOS DE USO - SPLUNK
+
 Aqui agregaremos las Consultas SPL para las Detecciones ante posible Ataques.
 
 Caso de Uso de Fuerza Bruta
