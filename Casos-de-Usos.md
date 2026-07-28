@@ -1,6 +1,6 @@
 ## CASOS DE USO - SPLUNK
 
-Consultas SPL para las Detecciones ante "posible" Ataques, en splunk he realizado alguna de ellas con diferentes casos de usos..
+Consultas SPL para las detecciones ante "posible" Ataques o comportamiento sospechosos, en splunk he realizado alguna de ellas con diferentes casos de usos..
 
 ### Caso de Uso de Fuerza Bruta 
 
