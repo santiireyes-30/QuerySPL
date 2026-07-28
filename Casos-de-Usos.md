@@ -1,10 +1,10 @@
 ## CASOS DE USO - SPLUNK
 
-Aqui agregaremos las Consultas SPL para las Detecciones ante posible Ataques.
+Consultas SPL para las Detecciones ante "posible" Ataques, en splunk he realizado alguna de ellas con diferentes casos de usos..
 
 ### Caso de Uso de Fuerza Bruta 
 
-| index = H70 Windows EventCode = 4625
+| index = ... EventCode = 4625
 
 | rename "Dirección de Red de Origen" as IP
 
@@ -40,7 +40,7 @@ Un ataque de tipo LFI puede permitir:
 
 Ver archivos sensibles. Escalar a Remote Code Execution (RCE). Robar credenciales o información interna. Consulta para averiguar si están haciendo LFI (Caso de uso LFI)
 
-index=vps_azure dest_port=80 (ip) "http_status"=404
+index= ... dest_port=80 (ip) "http_status"=404
 
 | stats count by http.url _time src_ip
 
@@ -99,7 +99,7 @@ Es un protocolo que se utiliza para enviar mensajes de control y diagnóstico en
 
 ### Caso de uso para ver los comandos que utilizó el atacante (RCE) 
 
-| index=vps_azure source="/home/admin(run)" (IP)
+| index=... source="/home/admin(run)" (IP)
 
 | stats count by _time http.url http.hostname dest_ip
 
@@ -275,7 +275,7 @@ Caso: Detección de borrado de logs de seguridad
 
 Corresponde al borrado del registro de auditoría de Windows.
 
-| index=wineventlog
+| index= ...
 
 | source="WinEventLog:Security"
 
@@ -345,7 +345,7 @@ Un atacante sólo puede ver tu IP privada si está dentro de tu red. Comprometi�
 
 Login exitoso luego de múltiples fallos
 
-index=security EventCode IN (4624,4625)
+index=... EventCode IN (4624,4625)
 
 | stats count(eval(EventCode=4625)) AS Failures
 
